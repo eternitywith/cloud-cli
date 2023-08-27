@@ -1,0 +1,498 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "git.aqrose.com/cloud/svc-apis/apis/golang/user";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+// 用户
+message User {
+  string name = 1;
+  string user_id = 2;
+  string user_name = 3;
+  string role = 4;
+  string email = 5;
+  string phone = 6;
+  repeated string team_ids = 7;
+  string nick_name = 8;
+  string real_name = 9;
+  google.protobuf.Timestamp create_time = 10;
+  google.protobuf.Timestamp update_time = 11;
+  google.protobuf.Timestamp last_login_time = 12;
+}//用户资源
+
+message CreateUserRequest {
+  // @inject_tag: validate:"required"
+  User user = 1;
+  // @inject_tag: validate:"required"
+  string password = 2;
+}//创建用户的数据
+
+message DeleteUserRequest {
+  // @inject_tag: validate:"required"
+  string name = 1;//
+}
+
+message UpdateUserRequest {
+  // @inject_tag: validate:"required"
+  User user = 1;
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+message GetUserRequest {
+  // @inject_tag: validate:"required"
+  string name = 1;//
+}
+
+message ListUsersRequest {
+  // 用户过滤条件
+  // required
+  string filter = 1;
+  // 页面范围
+  // gt=0 default=15
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  int32 page_size = 2;
+  // 页码
+  // gt=0 default=1
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  int32 page_num = 3;
+  // 排序规则
+  // example: order_by: "title desc, access" desc表示title降序 access升序
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  string order_by = 4;
+}//用户过滤器
+
+message ListUsersResponse{
+  // 用户列表
+  repeated User users = 1;
+  // 页码
+  int32 page_num = 2;
+  // 页面范围
+  int32 page_size = 3;
+  // 总数
+  int32 total_size = 4;
+}
+
+message VerifyPasswordRequest{
+  // @inject_tag: validate:"required"
+  string user_name = 1;
+  // @inject_tag: validate:"required"
+  string password = 2;
+}
+
+message GenerateForgetTokenRequest{
+  // @inject_tag: validate:"required"
+  string user_name = 1;
+}
+
+message GenerateForgetTokenResponse{
+  User user = 1;
+  string token = 2;
+}
+
+message VerifyForgetTokenRequest{
+  // @inject_tag: validate:"required"
+  string token = 1;
+}
+
+message ResetPasswordRequest{
+  // @inject_tag: validate:"required"
+  string reset_type = 1;
+  // @inject_tag: validate:"required"
+  string name = 2;
+  // @inject_tag: validate:"required"
+  string secret = 3;
+  // @inject_tag: validate:"required"
+  string new_password = 4;
+}
+
+// 用户的团队
+message Team {
+  string name = 1;
+  string team_id = 2;
+  string title = 3;
+  string description = 4;
+  repeated string user_ids = 5;
+  google.protobuf.Timestamp create_time = 6;
+  google.protobuf.Timestamp update_time = 7;
+}
+
+message DeleteTeamRequest{
+  // @inject_tag: validate:"required"
+  string name = 1;
+}
+
+message UpdateTeamRequest {
+  // @inject_tag: validate:"required"
+  Team team = 1;
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+message GetTeamRequest {
+  // @inject_tag: validate:"required"
+  string name = 1;
+}
+
+message ListTeamsRequest {
+  // 组过滤条件
+  // required
+  string filter = 1;
+  // 页面范围
+  // gt=0 default=15
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  int32 page_size = 2;
+  // 页码
+  // gt=0 default=1
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  int32 page_num = 3;
+  // 排序规则
+  // example: order_by: "title desc, access" 表示title降序 access升序
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  string order_by = 4;
+}//组过滤器
+
+message ListTeamsResponse {
+  // 组列表
+  repeated Team teams = 1;
+  // 页码
+  int32 page_num = 2;
+  // 页面范围
+  int32 page_size = 3;
+  // 总数
+  int32 total_size = 4;
+}
+
+// 用户列表和团队
+message JoinTeamRequest {
+  // @inject_tag: validate:"required"
+  repeated string user_ids = 1;
+  // @inject_tag: validate:"required"
+  string  name = 2;
+}
+
+// 用户列表和团队
+message QuitTeamRequest {
+  // @inject_tag: validate:"required"
+  repeated string user_ids = 1;
+  // @inject_tag: validate:"required"
+  string  name = 2;
+}
+
+// ========== Separator ==========
+
+// 用户补充信息
+message UserExtraInfo {
+  string user_id = 1;
+  string extra_info = 2;
+  google.protobuf.Timestamp create_time = 3;
+  google.protobuf.Timestamp update_time = 4;
+}
+
+message UpdateUserExtraInfoRequest {
+  // @inject_tag: validate:"required"
+  UserExtraInfo user_extra_info = 1;
+}
+
+message GetUserExtraInfoRequest {
+  // @inject_tag: validate:"required"
+  string user_id = 1;
+}
+
+message GetUserExtraInfoRequestByParam {
+  // @inject_tag: validate:"required"
+  string user_id = 1;
+  // @inject_tag: validate:"required"
+  string parameter = 2;
+}
+
+message ListUserExtraInfoRequest {
+  // @inject_tag: validate:"required"
+  int32 audit_status = 1; // 字段不存在: 未提交; 1: 已提交/待审核; 2: 已审核
+  // 页面范围
+  // gt=0 default=15
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  int32 page_size = 2;
+  // 页码
+  // gt=0 default=1
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  int32 page_num = 3;
+  // 排序规则
+  // example: order_by: "title desc, access" 表示title降序 access升序
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  string order_by = 4;
+}
+
+
+message GetUserExtraInfoResponse {
+  UserExtraInfo user_extra_info = 1;
+}
+
+message ListUserExtraInfoResponse {
+  repeated string user_ids = 1;
+  // 页码
+  int32 page_num = 2;
+  // 页面范围
+  int32 page_size = 3;
+  // 总数
+  int32 total_size = 4;
+
+}
+
+// ========== Separator ==========
+
+// 用户标签
+message Tag {
+  string name = 1;
+  string tag_id = 2;
+  string create_by = 3; // 标签创建人的 user_id
+  google.protobuf.Timestamp create_time = 4;
+  google.protobuf.Timestamp update_time = 5;
+}
+
+message CreateTagRequest {
+  // @inject_tag: validate:"required"
+  Tag tag = 1;
+}
+
+message CreateTagResponse {
+  Tag tag = 1;
+}
+
+message DeleteTagRequest {
+  // @inject_tag: validate:"required"
+  string tag_id = 1;
+}
+
+message UpdateTagRequest {
+  // @inject_tag: validate:"required"
+  Tag tag = 1;
+}
+
+message UpdateTagResponse {
+  Tag tag = 1;
+}
+
+message GetTagRequest{
+  string tag_id = 1;
+  string name = 2;
+}
+
+message GetTagResponse{
+  Tag tag = 1;
+}
+
+// ListTagsRequest 所有属性均为预留字段
+message ListTagsRequest {
+  string filter = 1;
+  // @inject_tag: validate:"omitempty,gt=0"
+  int32 page_size = 2;
+  // @inject_tag: validate:"omitempty,gt=0"
+  int32 page_num = 3;
+  // @inject_tag: validate:"omitempty,gt=0"
+  string order_by = 4;
+}
+
+// ListTagsResponse 分页相关属性为预留字段
+message ListTagsResponse {
+  repeated Tag tags = 1;
+  int32 page_num = 2;
+  int32 page_size = 3;
+  int32 total_size = 4;
+}
+
+message CreateUserTagRequest {
+  // @inject_tag: validate:"required"
+  string user_id = 1;
+  // @inject_tag: validate:"required"
+  string tag_id = 2;
+}
+
+message CreateUserTagResponse {
+  string user_id = 1;
+  repeated Tag tags = 2;
+}
+
+message DeleteUserTagRequest {
+  // @inject_tag: validate:"required"
+  string user_id = 1;
+  // @inject_tag: validate:"required"
+  string tag_id = 2;
+}
+
+message GetUserTagsRequest {
+  // @inject_tag: validate:"required"
+  string user_id = 1;
+}
+
+message GetUserTagsResponse {
+  string user_id = 1;
+  repeated Tag tags = 2;
+}
+
+message ListUserByTagRequest {
+  // @inject_tag: validate:"required"
+  string tag_id = 1;
+  // @inject_tag: validate:"required"
+  bool in_tag = 2; // true: 筛选包含标签的用户; false: 筛选不包含标签的用户
+  string filter = 3;
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  int32 page_size = 4;
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  int32 page_num = 5;
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  string order_by = 6;
+}
+
+message ListUserByTagResponse {
+  repeated User users = 1;
+  int32 page_num = 2;
+  int32 page_size = 3;
+  int32 total_size = 4;
+}
+
+message ListExtraInfoByAuditStatusRequest {
+  // @inject_tag: validate:"required"
+  int32 audit_status = 1;
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  int32 page_size = 2;
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  int32 page_num = 3;
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  string order_by = 4;
+}
+
+message ListExtraInfoByAuditStatusResponse {
+  repeated UserExtraInfo user_extra_info = 1;
+  int32 page_num = 2;
+  int32 page_size = 3;
+  int32 total_size = 4;
+}
+
+message ListUserByAuditStatusAndTagRequest {
+  // @inject_tag: validate:"required"
+  int32 audit_status = 1;
+  // @inject_tag: validate:"required"
+  string tag_id = 2;
+  // @inject_tag: validate:"required"
+  bool in_tag = 3; // true: 筛选包含标签的用户; false: 筛选不包含标签的用户
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  int32 page_size = 4;
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  int32 page_num = 5;
+  // @inject_tag: validate:"omitempty,required,gt=0"
+  string order_by = 6;
+
+}
+
+message ListUserByAuditStatusAndTagResponse {
+  repeated UserExtraInfo users = 1;
+  int32 page_num = 2;
+  int32 page_size = 3;
+  int32 total_size = 4;
+}
+
+// ========== Separator ==========
+
+service UserService {
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+    option (google.api.http) = {
+      get: "/users"
+    };
+  };//ok
+  rpc CreateUser(CreateUserRequest) returns (User) {
+    option (google.api.http) = {
+      post: "/users"
+      body: "*"
+    };
+  };//ok
+  rpc GetUser(GetUserRequest) returns (User) {
+    option (google.api.http) = {
+      get: "/{name=users/*}"
+    };
+  };//ok
+  rpc UpdateUser(UpdateUserRequest) returns (User) {
+    option (google.api.http) = {
+      patch: "/{user.name=users/*}"
+      body:"*"
+    };
+  };//ok
+  rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/{name=users/*}"
+    };
+  };//ok
+  rpc VerifyPassword(VerifyPasswordRequest) returns (User) {};//ok
+  rpc GenerateForgetToken(GenerateForgetTokenRequest) returns (GenerateForgetTokenResponse) {};
+  rpc VerifyForgetToken(VerifyForgetTokenRequest) returns (User) {};
+  rpc ResetPassword(ResetPasswordRequest) returns (google.protobuf.Empty) {}; //request_type:token;admin;myself;对应的secret为token;admin_password;old_password;
+
+  rpc ListTeams(ListTeamsRequest) returns (ListTeamsResponse) {
+    option (google.api.http) = {
+      get: "/teams"
+    };
+  };//ok
+  rpc CreateTeam(Team) returns (Team) {
+    option (google.api.http) = {
+      post: "/teams"
+      body: "*"
+    };
+  };//ok
+  rpc GetTeam(GetTeamRequest) returns (Team) {
+    option (google.api.http) = {
+      get: "/{name=teams/*}"
+    };
+  };
+  rpc UpdateTeam(UpdateTeamRequest) returns (Team) {
+    option (google.api.http) = {
+      patch: "/{team.name=teams/*}"
+      body:"*"
+    };
+  };
+  rpc DeleteTeam(DeleteTeamRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/{name=teams/*}"
+    };
+  };
+  rpc JoinTeam(JoinTeamRequest) returns (google.protobuf.Empty){
+    option (google.api.http) = {
+      post: "/join/{name=teams/*}"
+      body:"*"
+    };
+  };
+  rpc QuitTeam(QuitTeamRequest) returns (google.protobuf.Empty){
+    option (google.api.http) = {
+      post: "/quit/{name=teams/*}"
+      body:"*"
+    };
+  };
+
+  // ========== Separator ==========
+  // 用户补充信息相关接口
+  rpc UpdateUserExtraInfo(UpdateUserExtraInfoRequest) returns(google.protobuf.Empty) {};
+  rpc GetUserExtraInfo(GetUserExtraInfoRequest) returns(GetUserExtraInfoResponse) {};
+  rpc GetUserExtraInfoByParam(GetUserExtraInfoRequestByParam) returns(GetUserExtraInfoResponse) {};
+  // ListUserExtraInfo 获取用户身份的旧接口, v2304版本之后建议使用新接口 ListExtraInfoByAuditStatus
+  rpc ListUserExtraInfo(ListUserExtraInfoRequest) returns(ListUserExtraInfoResponse) {};
+
+  // ========== Separator ==========
+  // 标签表的CRUD接口
+  rpc CreateTag(CreateTagRequest) returns(CreateTagResponse) {};
+  rpc UpdateTag(UpdateTagRequest) returns(UpdateTagResponse) {};
+  rpc DeleteTag(DeleteTagRequest) returns(google.protobuf.Empty) {};
+  rpc GetTag(GetTagRequest) returns(GetTagResponse) {};
+  rpc ListTags(ListTagsRequest) returns(ListTagsResponse) {};
+  // 用户标签的CRUD接口
+  rpc CreateUserTag(CreateUserTagRequest) returns(CreateUserTagResponse) {};
+  rpc DeleteUserTag(DeleteUserTagRequest) returns(google.protobuf.Empty) {};
+  rpc GetUserTags(GetUserTagsRequest) returns(GetUserTagsResponse) {};
+  // ListUserByTag 通过标签筛选用户
+  rpc ListUserByTag(ListUserByTagRequest) returns(ListUserByTagResponse) {};
+  // ListUserByaAuditStatus 通过审核状态筛选用户
+  rpc ListExtraInfoByAuditStatus(ListExtraInfoByAuditStatusRequest) returns(ListExtraInfoByAuditStatusResponse) {};
+  // ListUserByaAuditStatus 通过审核状态和用户标签筛选用户
+  rpc ListUserByAuditStatusAndTag(ListUserByAuditStatusAndTagRequest) returns(ListUserByAuditStatusAndTagResponse) {};
+}

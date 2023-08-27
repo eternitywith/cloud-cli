@@ -1,0 +1,19 @@
+[
+    {
+        "name": "web-api",
+        "url": "",
+        "tags": [
+            {
+              "name": "1.0.0",
+              "url": "",
+              "utils": [
+                {
+                    "name": "file-storage-sign",
+                    "url": "",
+                    "description": "如果你的项目需要生成存储签名，请选择该项"
+                }
+              ]
+            }
+        ]
+    }
+]
