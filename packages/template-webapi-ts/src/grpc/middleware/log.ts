@@ -1,17 +1,17 @@
-import { ClientMiddlewareCall, CallOptions, ClientError } from 'nice-grpc'
-import { isAbortError } from 'abort-controller-x'
-import { logger } from '../../utils'
-import { isProduction } from '../../config'
+import {ClientMiddlewareCall, CallOptions, ClientError} from 'nice-grpc'
+import {isAbortError} from 'abort-controller-x'
+import {logger} from '../../utils'
+import {IS_PRODUCTION} from '../../config'
 
 // logMiddleware
 export async function* logMiddleware<Request, Response>(
   call: ClientMiddlewareCall<Request, Response>,
-  options: CallOptions,
+  options: CallOptions
 ) {
-  const { path } = call.method
+  const {path} = call.method
 
   // 开发环境logger请求详情
-  if (!isProduction) {
+  if (!IS_PRODUCTION) {
     logger.info('grpc call', path, 'start')
     logger.info('grpc call detail:', call, '\noptions:', options)
   }
@@ -20,7 +20,7 @@ export async function* logMiddleware<Request, Response>(
     const result = yield* call.next(call.request, options)
 
     // 开发环境logger响应详情
-    if (!isProduction) {
+    if (!IS_PRODUCTION) {
       logger.info('grpc call result:', result)
       logger.info('grpc call', path, 'end: OK')
     }

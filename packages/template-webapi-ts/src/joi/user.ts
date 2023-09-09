@@ -1,6 +1,6 @@
-import { Joi } from 'koa-joi-router'
+import {Joi} from 'koa-joi-router'
 
-export const listUsersJoi = {
+export const LIST_USERS_JOI = {
   filter: Joi.string(),
   page_num: Joi.number(),
   page_size: Joi.number(),

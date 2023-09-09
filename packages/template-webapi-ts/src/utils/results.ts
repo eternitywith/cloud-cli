@@ -8,7 +8,8 @@
     code: 0, message: '操作成功', data, meta
   }
  */
-export const Success = (data?: unknown, meta?: unknown, code = 0, message = '操作成功') => {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export function Success(data?: unknown, meta?: unknown, code = 0, message = '操作成功') {
   const response = meta
     ? {
         code,

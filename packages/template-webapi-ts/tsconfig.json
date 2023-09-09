@@ -9,11 +9,21 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "*": ["node_modules/*", "src/types/*", "*"]
+      "*": [
+        "node_modules/*",
+        "src/types/*",
+        "*"
+      ]
     }
   },
-  "include": ["**/*.ts"],
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "dist/**/*.ts"
+  ],
   "ts-node": {
     "esm": true
-  }
+  },
+  "extends": "./node_modules/gts/tsconfig-google.json",
 }

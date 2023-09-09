@@ -32,8 +32,6 @@ pre-dev:
   script:
     - npm install pnpm -g --registry=http://cicd.aqrose.com/nexus/repository/npm/
     - pnpm install --no-frozen-lockfile
-    - npm install pm2 -g
-    - pm2 install pm2-logrotate
   retry:
     max: 2
     when: always

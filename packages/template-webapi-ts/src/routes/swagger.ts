@@ -2,9 +2,9 @@ import router from 'koa-joi-router'
 import swaggerJSDoc from 'swagger-jsdoc'
 import fs from 'fs'
 import path from 'path'
-import { SERVER_PORT, SWAGGER_BASE_PATH, SWAGGER_JSON_URL } from '../config'
+import {SERVER_PORT, SWAGGER_BASE_PATH, SWAGGER_JSON_URL} from '../config'
 
-export const swagger = router()
+export const SWAGGER_ROYTER = router()
 
 const packageJsonPath = '../../package.json'
 const packageJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, packageJsonPath), 'utf-8'))
@@ -26,9 +26,9 @@ const options = {
 
 const swaggerSpec = swaggerJSDoc(options)
 
-swagger.get(SWAGGER_JSON_URL, async (ctx) => {
+SWAGGER_ROYTER.get(SWAGGER_JSON_URL, ctx => {
   ctx.set('Content-Type', 'application/json')
   ctx.body = swaggerSpec
 })
 
-export default swagger
+export default SWAGGER_ROYTER

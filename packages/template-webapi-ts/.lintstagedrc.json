@@ -1,12 +1,10 @@
 {
   "*.{js,ts,jsx,tsx}": [
     "prettier --write",
-    "eslint --fix",
-    "git add"
+    "eslint --fix"
   ],
   "*.md": [
     "prettier --write --parser markdown --prose-wrap never",
-    "eslint --fix",
-    "git add"
+    "eslint --fix"
   ]
 }

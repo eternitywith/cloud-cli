@@ -1,4 +1,4 @@
-import { Joi } from 'koa-joi-router'
+import {Joi} from 'koa-joi-router'
 export * from './user'
 
 /**
@@ -6,7 +6,7 @@ export * from './user'
  */
 
 // 通用list接口
-export const listJoi = {
+export const LIST_JOI = {
   filter: Joi.string().optional(),
   page_num: Joi.number().optional(),
   page_size: Joi.number().optional(),

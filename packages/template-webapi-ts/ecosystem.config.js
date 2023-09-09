@@ -1,13 +1,16 @@
+/* eslint-disable node/no-missing-require */
+/* eslint-disable node/no-unpublished-require */
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { CLUSTER_ENABLED, CLUSTER_CORE } = require('./dist/config')
-const { isProduction } = require('./dist/config/base')
+/* eslint-disable @typescript-eslint/naming-convention */
+const {CLUSTER_ENABLED, CLUSTER_CORE} = require('./dist/config')
+const {IS_PRODUCTION} = require('./dist/config/base')
 
 module.exports = {
   apps: [
     {
       name: 'web-api', // 修改后需要修改package.json中script中的pm2:show命令
       script: 'dist/app.js',
-      watch: !isProduction,
+      watch: !IS_PRODUCTION,
       autorestart: true,
       exec_mode: CLUSTER_ENABLED ? 'cluster' : 'fork',
       instances: CLUSTER_ENABLED ? CLUSTER_CORE : 1, // fork模式下无法实现多个副本使用一个端口，数量只能设置为1

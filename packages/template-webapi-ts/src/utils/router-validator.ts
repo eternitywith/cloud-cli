@@ -1,12 +1,12 @@
-import { Context } from 'koa'
-import { Exception } from '../middleware'
+import {Context} from 'koa'
+import {Exception} from '../middleware'
 
 /**
  * @description 路由异常处理器
  * @param ctx Context
  * @returns Exception
  */
-export const routerErrorHandler = (ctx: Context) => {
+export function routerErrorHandler(ctx: Context) {
   if (!ctx.invalid) return
 
   const d = ctx.invalid.params || ctx.invalid.query || ctx.invalid.body

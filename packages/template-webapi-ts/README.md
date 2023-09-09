@@ -6,7 +6,20 @@
 
 ## 环境准备
 
+注意：请先为项目添加远程源(git remote add)之后再进行npm i操作，否则可能会导致husky无效。
+
+vscode插件推荐：.vscode/extensions.json vscode代码格式化配置：.vscode/settings.json
+
 环境：vscode、node18+、pnpm、pm2
+
+根据是否使用pm2(cluster集群模式需要基于pm2，请根据需要)，安装环境有两种选择，不使用pm2，如下：
+
+```bash
+# 全局安装pnpm
+npm install pnpm -g
+```
+
+使用pm2，如下：
 
 ```bash
 # 全局安装pnpm
@@ -19,7 +32,17 @@ npm install pm2 -g
 pm2 install pm2-logrotate
 ```
 
-代码自动格式化需安装vscode拓展：ESLint、Prettier - Code formatter、Prettier ESLint
+使用pm2之后请修改对应的gitlab-ci.yml和Dockerfile文件。
+
+## 项目规范
+
+[Google TypeScript Style](https://google.github.io/styleguide/tsguide.html)
+
+项目中使用vscode+eslint+prettier+[gts](https://github.com/google/gts)实现lint+format+automatic code fix。但对于命名规范，gts中似乎没有定义，因此手动编写了eslint rules实现基本的命名规范，详见：.eslintrc.js(rules @typescript-eslint/naming-convention)
+
+git提交时通过husky+lint-staged实现代码风格检查并自动修复。
+
+git提交时通过husky+commitlint实现验证提交信息，规则见：.commitlintrc.js。
 
 ## 技术栈
 
@@ -31,7 +54,7 @@ grpc：nice-grpc
 
 接口文档：swagger-jsdoc、koa2-swagger-ui
 
-项目规范：eslint、prettier、commitlint
+项目规范：eslint、prettier、husky、lint-staged、commitlint
 
 日志：log4js
 
@@ -73,14 +96,9 @@ pnpm run pm2:logs
 pnpm run pm2:show
 ```
 
-## 命名规范
-
-- 文件、目录：kebab-case
-- 函数、变量名：小驼峰(普通)、大驼峰(具有特殊含义的)
-
 ## 项目结构
 
-根目录下的目录，都包含一个 index.ts，该目录下的所有可导出内容都可通过该文件导出，其他地方引用时，直接根据目录相对地址引用。
+目录一般都包含一个 index.ts，该目录下的所有可导出内容都可通过该文件导出，其他地方引用时，直接根据目录相对地址引用。
 
 - src
   - config 配置目录

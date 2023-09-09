@@ -1,4 +1,4 @@
-import { Random } from 'mockjs'
+import {Random} from 'mockjs'
 
 /**
  * 模拟数据
@@ -14,7 +14,7 @@ export function mockResponse() {
 
   // 随机生成时间长度
   const len = Random.integer(7, 30)
-  const result = []
+  const result: any[] = []
   for (let i = 0; i < len; i++) {
     result.push({
       total: Random.integer(1, 1000),

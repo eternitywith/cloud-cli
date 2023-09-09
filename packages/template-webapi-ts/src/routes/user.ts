@@ -1,9 +1,10 @@
-import { listUsersJoi } from '../joi/user'
+import {LIST_USERS_JOI} from '../joi/user'
 import router from 'koa-joi-router'
-import { listUsers } from '../controller/user'
+import {listUsers} from '../controller/user'
 
-export const user = router()
-user.prefix('/users')
+export const USER_ROUTER = router()
+
+USER_ROUTER.prefix('/users')
 
 const routes: Array<router.Spec> = [
   // 获取用户列表
@@ -12,9 +13,10 @@ const routes: Array<router.Spec> = [
     path: '/',
     validate: {
       continueOnError: true,
-      query: listUsersJoi,
+      query: LIST_USERS_JOI,
     },
     handler: listUsers,
   },
 ]
-user.route(routes)
+
+USER_ROUTER.route(routes)

@@ -4,4 +4,4 @@ WORKDIR /app
 
 COPY . .
 
-CMD ["npm", "run", "pm2:start"]
+CMD ["npm", "run", "serve"]

@@ -1,7 +1,7 @@
-import { USER_SVC } from "./grpc"
+import {USER_SVC} from './grpc'
 
 /**
- * 登陆认证配置 
+ * 登陆认证配置
  */
 
 // client_id

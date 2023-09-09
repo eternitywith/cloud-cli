@@ -1,4 +1,4 @@
-/dist/*
+dist/
 .local
 .output.js
 /node_modules/**
@@ -9,5 +9,3 @@
 /public/*
 
 **/compiled-protos/**
-
-/grpc/example/**/*.js

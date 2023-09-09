@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import axios from 'axios'
 import AWS from 'aws-sdk'
 import {
@@ -8,7 +9,7 @@ import {
   S3_ENDPOINT,
 } from '../../../config'
 
-AWS.config.update({ region: 'default' })
+AWS.config.update({region: 'default'})
 
 const aws = new AWS.S3({
   apiVersion: '2006-03-01',
@@ -30,7 +31,7 @@ export function AWSCreateGetSignedUrl(project_id: string, key: string) {
     Key: `${project_id}/${key}`,
     Expires: S3_SIGNED_EXPIRES,
   })
-  return { url }
+  return {url}
 }
 
 /**
@@ -45,7 +46,7 @@ export function AWSCreatePutSignedUrl(
   project_id: string,
   key: string,
   mime_type: string,
-  md5: string,
+  md5: string
 ) {
   return new Promise((resolve, reject) => {
     const url = aws.getSignedUrl('putObject', {
@@ -64,9 +65,9 @@ export function AWSCreatePutSignedUrl(
       url: headUrl,
     })
       .then(() => {
-        resolve({ url })
+        resolve({url})
       })
-      .catch((err) => {
+      .catch(err => {
         if (err.response && err.response.status === 404) {
           resolve({
             url,
@@ -96,7 +97,7 @@ export function AWSGetListSignedUrl(project_id: string, limit: string, marker: s
     Marker: marker,
     MaxKeys: limit,
   })
-  return { url }
+  return {url}
 }
 
 /**
@@ -111,5 +112,5 @@ export function AWSGetFileInfoSignedUrl(project_id: string, key: string) {
     Key: `${project_id}/${key}`,
     Expires: S3_SIGNED_EXPIRES,
   })
-  return { url }
+  return {url}
 }

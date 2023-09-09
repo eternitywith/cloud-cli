@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 // @ts-nocheck
 /**
  * 根据ufile源码改编
@@ -55,7 +56,7 @@ export class UCloudUFile {
     tokenPublicKey = 'TOKEN_15a04d14-9ca8-4c84-a4d2-396881ef51e1',
     tokenPrivateKey = '6ea4b071-0169-4379-8af6-306bd7dcfa9b',
     expires = 3600,
-    prefix = '',
+    prefix = ''
   ) {
     // 存储空间名称。既可以在这里配置，也可以在实例化时传参配置。
     // 例如 bucketName = "example-name"
@@ -80,7 +81,7 @@ export class UCloudUFile {
   }
 
   getBucketUrl() {
-    let { bucketUrl } = this
+    let {bucketUrl} = this
 
     // 如果不是以"/"结尾，则自动补上
     if (bucketUrl.charAt(bucketUrl.length - 1) !== '/') {
@@ -103,10 +104,10 @@ export class UCloudUFile {
   getUFileToken(
     options: GetTokenOptions,
     success: (arg0: string) => void,
-    error: (arg0: string) => void,
+    error: (arg0: string) => void
   ) {
     const method = options.method || 'GET'
-    const file = options.file || { type: '', name: '' }
+    const file = options.file || {type: '', name: ''}
     const fileName = options.fileName
     // 为get签名添加过期时间
     const date = options.date ?? ''
@@ -154,7 +155,7 @@ export class UCloudUFile {
       content_md5: string,
       content_type: string,
       date: string | number,
-      put_policy: string,
+      put_policy: string
     ) {
       let data = ''
       data += method.toUpperCase() + '\n'
@@ -182,7 +183,7 @@ export class UCloudUFile {
       md5,
       contentType!,
       date,
-      putPolicy,
+      putPolicy
     )
     if (token) {
       success(token)
@@ -194,8 +195,8 @@ export class UCloudUFile {
   // 获取文件列表
   getFileList(
     options: ListFilesOptions,
-    success: (arg0: { url: string; token: string }) => void,
-    error: any,
+    success: (arg0: {url: string; token: string}) => void,
+    error: any
   ) {
     const method = 'GET'
     const prefix = options.prefix || this.PREFIX
@@ -216,15 +217,15 @@ export class UCloudUFile {
           token,
         })
       },
-      error,
+      error
     )
   }
 
   // 查看文件信息
   getFileDetail(
     fileName: string,
-    success: (arg0: { url: string; token: string }) => void,
-    error: any,
+    success: (arg0: {url: string; token: string}) => void,
+    error: any
   ) {
     const method = 'HEAD'
     const requestToken = {
@@ -241,22 +242,22 @@ export class UCloudUFile {
           token,
         })
       },
-      error,
+      error
     )
   }
 
   // 普通上传
   uploadFile(
     options: PutFileOptions,
-    success: (arg0: { url: string; token: string }) => void,
-    error: any,
+    success: (arg0: {url: string; token: string}) => void,
+    error: any
   ) {
     const method = 'PUT'
-    const file = options.file || { name: '' }
+    const file = options.file || {name: ''}
     const fileRename = options.fileRename
     const fileName = this.addPrefix(this.getFileName(file, fileRename))
 
-    const { putPolicy } = options
+    const {putPolicy} = options
 
     const requestToken = {
       method,
@@ -274,15 +275,15 @@ export class UCloudUFile {
           token,
         })
       },
-      error,
+      error
     )
   }
 
   // 下载文件
   downloadFile(
     fileName: string,
-    success: (arg0: { url: string; token: string; expires: number }) => void,
-    error: any,
+    success: (arg0: {url: string; token: string; expires: number}) => void,
+    error: any
   ) {
     const method = 'GET'
     const expires = parseInt(+new Date() / 1000 + '') + this.EXPIRES
@@ -302,16 +303,12 @@ export class UCloudUFile {
           expires,
         })
       },
-      error,
+      error
     )
   }
 
   // 删除文件
-  deleteFile(
-    fileName: string,
-    success: (arg0: { url: string; token: string }) => void,
-    error: any,
-  ) {
+  deleteFile(fileName: string, success: (arg0: {url: string; token: string}) => void, error: any) {
     const method = 'DELETE'
     const requestToken = {
       method,
@@ -327,7 +324,7 @@ export class UCloudUFile {
           token,
         })
       },
-      error,
+      error
     )
   }
 }

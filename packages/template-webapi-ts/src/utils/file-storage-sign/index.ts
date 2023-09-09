@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import axios from 'axios'
-import { UCloudUFile } from './ufile/ufile-token'
+import {UCloudUFile} from './ufile/ufile-token'
 import AWS from 'aws-sdk'
 import {
   S3_STORAGE_TYPE,
@@ -57,7 +58,7 @@ export class FileSign {
     accessKey: string,
     secretKey: string,
     bucket: string,
-    expiresIn: number,
+    expiresIn: number
   ) {
     this.ENDPOINT = endPoint
     this.ACCESSKEY = accessKey
@@ -74,7 +75,7 @@ export class FileSign {
           bucketUrl,
           this.ACCESSKEY,
           this.SECRETKEY,
-          this.SIGNED_EXPIRES,
+          this.SIGNED_EXPIRES
         )
         break
       }
@@ -103,18 +104,18 @@ export class FileSign {
           let thumbnail: string
           ;(this.STORAGE as UCloudUFile).downloadFile(
             fileName,
-            (options) => {
+            options => {
               const signature = options.token.split(':')[1]
               url = `${options.url}?UCloudPublicKey=${this.ACCESSKEY}&Expires=${options.expires}&Signature=${signature}`
               // 如果为支持的图像格式，则使用 UCloud 图片转换服务转为 webp 格式。
               preview = `${url}&iopcmd=convert&dst=webp&Q=70`
 
               thumbnail = `${url}&iopcmd=thumbnail&type=6&width=100&height=74`
-              resolve({ url, preview, thumbnail })
+              resolve({url, preview, thumbnail})
             },
             (error: any) => {
               reject(error)
-            },
+            }
           )
           break
         }
@@ -125,7 +126,7 @@ export class FileSign {
               Key: key,
               Expires: this.SIGNED_EXPIRES,
             })
-            resolve({ url })
+            resolve({url})
           } catch (error) {
             reject(error)
           }
@@ -148,11 +149,11 @@ export class FileSign {
           }
           ;(this.STORAGE as UCloudUFile).uploadFile(
             data,
-            (options) => {
-              const { url, token } = options
+            options => {
+              const {url, token} = options
               ;(this.STORAGE as UCloudUFile).getFileDetail(
                 data.file.name,
-                (opt) => {
+                opt => {
                   const url1 = opt.url
                   const token1 = opt.token
                   axios({
@@ -163,9 +164,9 @@ export class FileSign {
                     },
                   })
                     .then(() => {
-                      resolve({ url })
+                      resolve({url})
                     })
-                    .catch((err) => {
+                    .catch(err => {
                       if (err.response && err.response.status === 404) {
                         resolve({
                           url,
@@ -181,12 +182,12 @@ export class FileSign {
                 },
                 (error: any) => {
                   reject(error)
-                },
+                }
               )
             },
             (error: any) => {
               reject(error)
-            },
+            }
           )
           break
         }
@@ -213,9 +214,9 @@ export class FileSign {
             url: headUrl,
           })
             .then(() => {
-              resolve({ url })
+              resolve({url})
             })
-            .catch((err) => {
+            .catch(err => {
               if (err.response && err.response.status === 404) {
                 resolve({
                   url,
@@ -244,7 +245,7 @@ export class FileSign {
               limit,
               marker,
             },
-            (options) => {
+            options => {
               resolve({
                 url: options.url,
                 headers: {
@@ -254,7 +255,7 @@ export class FileSign {
             },
             (error: any) => {
               reject(error)
-            },
+            }
           )
           break
         }
@@ -268,7 +269,7 @@ export class FileSign {
               Marker: marker,
               MaxKeys: limit,
             })
-            resolve({ url })
+            resolve({url})
           } catch (error) {
             reject(error)
           }
@@ -286,7 +287,7 @@ export class FileSign {
           let url
           ;(this.STORAGE as UCloudUFile).getFileDetail(
             filename,
-            (options) => {
+            options => {
               url = {
                 url: options.url,
                 headers: {
@@ -297,7 +298,7 @@ export class FileSign {
             },
             (error: any) => {
               reject(error)
-            },
+            }
           )
           break
         }
@@ -309,7 +310,7 @@ export class FileSign {
               Key: `${project_id}/${key}`,
               Expires: this.SIGNED_EXPIRES,
             })
-            resolve({ url })
+            resolve({url})
           } catch (error) {
             reject(error)
           }
@@ -325,7 +326,7 @@ export const sign = new FileSign(
   S3_ACCESSKEY,
   S3_SECRETKEY,
   S3_PROJECTS_BUCKET,
-  S3_SIGNED_EXPIRES,
+  S3_SIGNED_EXPIRES
 )
 
 export default sign

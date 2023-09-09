@@ -1,10 +1,10 @@
 export * from './error-code'
 export * from './change-handler'
 
-import { Context, Next } from 'koa'
+import {Context, Next} from 'koa'
 import * as HttpErrors from 'http-errors'
-import { errorCode } from './error-code'
-import { handleGrpcErrorStatus, handleGrpcErrorCode } from './change-handler'
+import {ERROR_CODE} from './error-code'
+import {handleGrpcErrorStatus, handleGrpcErrorCode} from './change-handler'
 
 /**
  * @description 自定义异常
@@ -26,7 +26,7 @@ export class Exception extends Error implements HttpErrors.HttpError {
     super()
 
     // 允许只传入code和status，message将自动映射
-    this.customMsg = message || errorCode[code]
+    this.customMsg = message || ERROR_CODE[code]
     this.code = code
     this.status = status
   }
@@ -35,10 +35,10 @@ export class Exception extends Error implements HttpErrors.HttpError {
   [key: string]: any
   statusCode!: number
   expose!: boolean
-  headers?: { [key: string]: string } | undefined
+  headers?: {[key: string]: string} | undefined
 }
 
-export const errorHandler = async (ctx: Context, next: Next) => {
+export async function errorHandler(ctx: Context, next: Next) {
   try {
     await next()
   } catch (err) {
@@ -56,8 +56,8 @@ export const errorHandler = async (ctx: Context, next: Next) => {
 
     // 获取message，优先new Exception时自定义的message
     const message = noCustom
-      ? error.customMsg || error.details || errorCode[code] // 优先grpc响应details
-      : error.customMsg || errorCode[code] || error.details // 优先code映射后的message
+      ? error.customMsg || error.details || ERROR_CODE[code] // 优先grpc响应details
+      : error.customMsg || ERROR_CODE[code] || error.details // 优先code映射后的message
 
     ctx.body = {
       code,

@@ -1,13 +1,13 @@
 import Koa from 'koa'
-import { koaSwagger } from 'koa2-swagger-ui'
+import {koaSwagger} from 'koa2-swagger-ui'
 import koaJson from 'koa-json'
 import bodyParser from 'koa-bodyparser'
 import koaQs from 'koa-qs'
-import { swagger, user } from './routes'
-import { errorHandler } from './middleware'
-import { isProduction, SERVER_PORT, SWAGGER_JSON_URL, SWAGGER_ROUTE_PREFIX } from './config'
-import { auth, createJWT } from './middleware'
-import { logger } from './utils'
+import {SWAGGER_ROYTER, USER_ROUTER} from './routes'
+import {errorHandler} from './middleware'
+import {IS_PRODUCTION, SERVER_PORT, SWAGGER_JSON_URL, SWAGGER_ROUTE_PREFIX} from './config'
+import {auth, createJWT} from './middleware'
+import {logger} from './utils'
 
 const app = new Koa()
 app.use(errorHandler)
@@ -20,14 +20,14 @@ app.use(
   bodyParser({
     enableTypes: ['json', 'form', 'text'],
     jsonLimit: '10mb',
-  }),
+  })
 )
 
 // JSON pretty-printed response middleware
 app.use(koaJson())
 
 // 开发环境打印请求log
-if (!isProduction) {
+if (!IS_PRODUCTION) {
   app.use(async (ctx, next) => {
     logger.info(`${ctx.method} ${ctx.url} request begin`)
 
@@ -46,10 +46,10 @@ app.use(
     swaggerOptions: {
       url: SWAGGER_JSON_URL,
     },
-  }),
+  })
 )
 // 挂载swagger路由
-app.use(swagger.middleware())
+app.use(SWAGGER_ROYTER.middleware())
 
 // 认证
 app.use(auth)
@@ -58,7 +58,7 @@ app.use(auth)
 app.use(createJWT)
 
 // routers
-app.use(user.middleware())
+app.use(USER_ROUTER.middleware())
 
 // listen error and log
 app.on('error', (err, ctx) => {

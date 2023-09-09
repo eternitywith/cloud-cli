@@ -2,7 +2,7 @@ interface Map {
   [key: string]: string
 }
 
-export const errorCode: Map = {
+export const ERROR_CODE: Map = {
   0: '操作成功',
   /* 通用code码 1000 - 2999 */
   1000: '服务器内部错误',

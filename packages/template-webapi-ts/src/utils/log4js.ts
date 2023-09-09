@@ -1,4 +1,4 @@
-import { isProduction } from '../config'
+import {IS_PRODUCTION} from '../config'
 import log4js from 'log4js'
 
 log4js.configure({
@@ -26,13 +26,14 @@ log4js.configure({
   },
   categories: {
     default: {
-      appenders: isProduction ? ['stdout'] : ['stdout', 'dateFile'],
+      appenders: IS_PRODUCTION ? ['stdout'] : ['stdout', 'dateFile'],
       level: 'trace',
       enableCallStack: true,
     },
   },
 })
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const logger = log4js.getLogger()
 
 export default logger

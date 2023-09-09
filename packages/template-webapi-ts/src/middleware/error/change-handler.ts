@@ -3,7 +3,7 @@
  * @param {number} code code 状态码
  * @return {number} 自定义状态码
  */
-export const handleGrpcErrorCode = (code = 1000): number => {
+export function handleGrpcErrorCode(code = 1000): number {
   let customCode: number
   switch (code) {
     case 2:
@@ -54,7 +54,7 @@ export const handleGrpcErrorCode = (code = 1000): number => {
  * @param {number} code code 状态码
  * @return {number} http状态码
  */
-export const handleGrpcErrorStatus = (code: number): number => {
+export function handleGrpcErrorStatus(code: number): number {
   let customStatus: number
   switch (code) {
     case 0:

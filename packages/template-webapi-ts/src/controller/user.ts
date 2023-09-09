@@ -1,7 +1,7 @@
-import { Context } from 'koa'
-import { routerErrorHandler, Success } from '../utils'
-import { userClient } from '../grpc'
-import { Metadata } from 'nice-grpc'
+import {Context} from 'koa'
+import {routerErrorHandler, Success} from '../utils'
+import {USER_CLIENT} from '../grpc'
+import {Metadata} from 'nice-grpc'
 
 /**
  *  @openapi
@@ -46,20 +46,21 @@ import { Metadata } from 'nice-grpc'
  *          $ref: '#/components/responses/401'
  *
  */
-export const listUsers = async (ctx: Context) => {
+export async function listUsers(ctx: Context) {
   if (ctx.invalid) routerErrorHandler(ctx)
-  const { jwt } = ctx.state
+  const {jwt} = ctx.state
 
-  const { filter, page_num, page_size, order_by } = ctx.request.query as any
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const {filter, page_num, page_size, order_by} = ctx.request.query as any
 
-  const userList = await userClient.listUsers(
+  const userList = await USER_CLIENT.listUsers(
     {
       filter,
       page_num,
       page_size,
       order_by,
     },
-    { metadata: Metadata({ authorization: jwt }) },
+    {metadata: Metadata({authorization: jwt})}
   )
 
   ctx.body = Success(userList)

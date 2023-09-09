@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import axios from 'axios'
 import UCloudUFile from './ufile-token'
 import {
@@ -13,7 +14,7 @@ const ufile = new UCloudUFile(
   S3_BUCKET_URL,
   S3_ACCESSKEY,
   S3_SECRETKEY,
-  S3_SIGNED_EXPIRES,
+  S3_SIGNED_EXPIRES
 )
 
 const REGEXP_IMGFILE = /(\.bmp|\.png)$/i // 判断是否为支持转换的图像格式。
@@ -30,16 +31,16 @@ export function UCloudCreateGetSignedUrl(project_id: string, key: string) {
   return new Promise((resolve, reject) => {
     ufile.downloadFile(
       fileName,
-      (options) => {
+      options => {
         const signature = options.token.split(':')[1]
         url = `${options.url}?UCloudPublicKey=${S3_ACCESSKEY}&Expires=${options.expires}&Signature=${signature}`
         // 如果为支持的图像格式，则使用 UCloud 图片转换服务转为 webp 格式。
         if (REGEXP_IMGFILE.test(fileName)) preview = `${url}&iopcmd=convert&dst=webp&Q=70`
-        resolve({ url, preview })
+        resolve({url, preview})
       },
       (error: any) => {
         reject(error)
-      },
+      }
     )
   })
 }
@@ -56,7 +57,7 @@ export function UCloudCreatePutSignedUrl(
   project_id: string,
   key: string,
   mime_type: string,
-  md5: string,
+  md5: string
 ) {
   const data = {
     file: {
@@ -68,11 +69,11 @@ export function UCloudCreatePutSignedUrl(
   return new Promise((resolve, reject) => {
     ufile.uploadFile(
       data,
-      (options) => {
-        const { url, token } = options
+      options => {
+        const {url, token} = options
         ufile.getFileDetail(
           data.file.name,
-          (opt) => {
+          opt => {
             const url1 = opt.url
             const token1 = opt.token
             axios({
@@ -83,9 +84,9 @@ export function UCloudCreatePutSignedUrl(
               },
             })
               .then(() => {
-                resolve({ url })
+                resolve({url})
               })
-              .catch((err) => {
+              .catch(err => {
                 if (err.response && err.response.status === 404) {
                   resolve({
                     url,
@@ -101,12 +102,12 @@ export function UCloudCreatePutSignedUrl(
           },
           (error: any) => {
             throw new Error(error)
-          },
+          }
         )
       },
       (error: any) => {
         throw new Error(error)
-      },
+      }
     )
   })
 }
@@ -126,7 +127,7 @@ export function UCloudGetListSignedUrl(project_id: string, limit: string, marker
         limit,
         marker,
       },
-      (options) => {
+      options => {
         resolve({
           url: options.url,
           headers: {
@@ -136,7 +137,7 @@ export function UCloudGetListSignedUrl(project_id: string, limit: string, marker
       },
       (error: any) => {
         reject(error)
-      },
+      }
     )
   })
 }
@@ -153,7 +154,7 @@ export function UCloudGetFileInfoSignedUrl(project_id: string, key: string) {
   return new Promise((resolve, reject) => {
     ufile.getFileDetail(
       filename,
-      (options) => {
+      options => {
         url = {
           url: options.url,
           headers: {
@@ -164,7 +165,7 @@ export function UCloudGetFileInfoSignedUrl(project_id: string, key: string) {
       },
       (error: any) => {
         reject(error)
-      },
+      }
     )
   })
 }

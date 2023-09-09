@@ -1,20 +1,24 @@
-import { Context, Next } from 'koa'
+import {Context, Next} from 'koa'
 import jwt from 'jsonwebtoken'
-import { Exception } from '../error'
-import { logger } from '../../utils'
-import { JWT_ALGORITHM, JWT_EXPIRES_IN, JWT_TOKEN_SECRET } from '../../config'
+import {Exception} from '../error'
+import {logger} from '../../utils'
+import {JWT_ALGORITHM, JWT_EXPIRES_IN, JWT_TOKEN_SECRET} from '../../config'
 
 interface User {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   UserId: string
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   Roles: Array<string>
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   Groups: Array<string>
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   UserName: Array<string>
 }
 const expiresIn = JWT_EXPIRES_IN || 60
 const algorithm = (JWT_ALGORITHM || 'HS256') as jwt.Algorithm
 const secret = JWT_TOKEN_SECRET || 'cloud.aqrose.com'
 
-export const createJWT = async (ctx: Context, next: Next): Promise<void> => {
+export async function createJWT(ctx: Context, next: Next): Promise<void> {
   try {
     const state = ctx.state
     const user: User = {
@@ -32,11 +36,11 @@ export const createJWT = async (ctx: Context, next: Next): Promise<void> => {
           nbf: Math.floor(Date.now() / 1000) - 5,
         },
         secret,
-        { algorithm },
+        {algorithm},
         (err, token) => {
           if (err) reject(err)
           resolve(token)
-        },
+        }
       )
     })
     if (!jwtVal) {

@@ -1,0 +1,10 @@
+# 约定编辑器配置的文件，作用是帮助开发团队在不同的编辑器和开发环境中保持一致的代码风格和格式化规范。
+
+root = true # 配置文件在根目录
+
+[*] # 匹配所有文件
+indent_style = space # 缩进样式使用空格
+indent_size = 2 # 每个缩进级别的空格数为 2 个
+end_of_line = lf # 行尾格式为 LF
+charset = utf-8 # 源代码文件的字符编码为 UTF-8
+insert_final_newline = true # 文件末尾要插入一个空行
