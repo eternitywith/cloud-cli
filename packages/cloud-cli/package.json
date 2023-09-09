@@ -1,6 +1,6 @@
 {
-  "name": "cloud-cli",
-  "version": "1.0.0",
+  "name": "aq-cloud-cli",
+  "version": "0.0.1",
   "description": "",
   "bin": {
     "cloud": "./bin/cloud-cli.js"

@@ -1,6 +1,6 @@
 {
-  "name": "@cloud-cli/template-webapi-ts",
-  "version": "1.0.0",
+  "name": "@aq-cloud-cli/template-webapi-ts",
+  "version": "0.0.1",
   "description": "Cloud Template WebApi With TS",
   "main": "dist/app.js",
   "repository": {
