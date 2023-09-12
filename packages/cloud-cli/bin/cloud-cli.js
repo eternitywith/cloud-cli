@@ -24,7 +24,7 @@ program
 
 program
   .usage(`<command> [option]`)
-  .version(`cloud-cli@${require("../../../package.json").version}`);
+  .version(`cloud-cli@${require("../package.json").version}`);
 
 program.on("--help", function () {
   console.log();

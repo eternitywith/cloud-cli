@@ -17,7 +17,6 @@
     "dev": "cross-env NODE_ENV=development nodemon --watch '*.*' -e ts,json --exec ts-node src/app.ts",
     "build": "tsc",
     "serve": "tsc && cross-env NODE_ENV=production node dist/app.js",
-    "prepare": "husky install",
     "protoc": "bash src/bin/protoc.sh",
     "pm2:dev-start": "tsc && cross-env NODE_ENV=development pm2 start ecosystem.config.js",
     "pm2:start": "tsc && cross-env NODE_ENV=production pm2 start ecosystem.config.js",

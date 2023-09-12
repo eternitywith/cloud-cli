@@ -1,27 +1,23 @@
-const { fetchRepoList, fetchTagList } = require("../../utils/request");
+const { fetchRepoList, fetchVersionList, fetchUtilList, getDuwnloadUrl, downloadRepo } = require("../../utils/request");
 const Inquirer = require("inquirer");
 const { wrapLoading } = require("../../utils/utils");
-const downloadGitRepo = require("download-git-repo");
 const util = require("util");
 const path = require("path");
-const fs = require("fs-extra");
+const { existsSync } = require("fs-extra");
 
 class Creator {
-
-  downloadCacheDir = path.resolve(process.cwd(),  "downloadCache")
-
   constructor(projectName, targetDir, options) {
     this.name = projectName;
     this.target = targetDir;
     this.options = options;
-    this.downloadGitRepo = util.promisify(downloadGitRepo);
+    this.downloadGitRepo = downloadRepo;
   }
 
   async fetchRepo() {
     let repos = await wrapLoading(fetchRepoList, "Waiting fetch template");
     if (!repos) return;
 
-    repos = repos.map((item) => item.name);
+    // const showRepos = repos.map((item) => item.name);
 
     let { repo } = await Inquirer.prompt({
       name: "repo",
@@ -33,63 +29,58 @@ class Creator {
     return repo;
   }
 
-  async fetchTag(repo) {
-    let tags = await wrapLoading(fetchTagList, "Waiting fetch tag", repo);
-    if (!tags) return;
+  async fetchVersion(repo) {
+    let versions = await wrapLoading(fetchVersionList, "Waiting fetch version", repo);
+    if (!versions) return;
 
-    tags = tags.map((item) => item.name);
-
-    let { tag } = await Inquirer.prompt({
-      name: "tag",
+    const { version } = await Inquirer.prompt({
+      name: "version",
       type: "list",
-      choices: tags,
-      message: "Please choose a tag to create project:",
+      choices: versions,
+      message: "Please choose a version to create project:",
     });
-    return tag;
+
+    return version
   }
 
-  async fetchUtils(tag) {
-    let utils = tag.utils;
+  async fetchUtils(repo, version) {
+    let utils = await wrapLoading(fetchUtilList, "Waiting fetch util", repo, version);
     if (!utils) return;
 
-    utils = utils.map((item) => item.name);
+    const { util } = await Inquirer.prompt({
+      name: "util",
+      type: "checkbox",
+      choices: utils,
+      message: "Please choose utils to create project:",
+    });
 
-    // ***
+    return util
   }
+
+  async download(repo, version) {
+    // 下载路径
+    let requestUrl = await getDuwnloadUrl(repo, version);
+    await wrapLoading(
+      this.downloadGitRepo,
+      "waiting download ...",
+      { repo, version, requestUrl }
+    );
+  }
+
 
   async generate(cacheDir, options) {
 
-  }
-
-  async download(repo, tag) {
-    // 下载路径
-    let requestUrl = tag.url;
-
-    // 查找缓存
-    const cacheDir = path.join(this.downloadCacheDir, `${repo}@${tag}`)
-    if (fs.existsSync(cacheDir)) {
-      return cacheDir;
-    } else {
-      await wrapLoading(
-        this.downloadGitRepo,
-        "waiting download ...",
-        requestUrl,
-        cacheDir
-      );
-    }
-    
-    return cacheDir;
   }
 
   async create() {
     // 先去拉去当前组织下的模版
     let repo = await this.fetchRepo();
     // 通过模板找到版本号
-    let tag = await this.fetchTag(repo);
+    let version = await this.fetchVersion(repo);
     // 选择项目中依赖的工具
-    let utils = await this.fetchUtils(tag)
+    let utils = await this.fetchUtils(repo, version)
     // 下载
-    const cacheDir = await this.download(repo, tag);
+    const cacheDir = await this.download(repo, version);
     // 生成最终项目
     await this.generate(cacheDir, utils)
   }
